@@ -1,0 +1,40 @@
+from abc import ABC, abstractmethod
+
+class Servico(ABC):
+    @abstractmethod
+    def acessar(self):
+        pass
+
+
+class ServicoReal(Servico):
+    def acessar(self):
+        print("Acesso liberado ao sistema")
+
+
+class ProxyServico(Servico):
+    def __init__(self):
+        self.servico_real = ServicoReal()
+        self.tentativas = 0
+        self.bloqueado = False
+
+    def acessar(self):
+        if self.bloqueado:
+            print("Sistema bloqueado")
+            return
+
+        self.tentativas += 1
+
+        if self.tentativas <= 3:
+            self.servico_real.acessar()
+        else:
+            self.bloqueado = True
+            print("Sistema bloqueado")
+
+
+proxy = ProxyServico()
+
+proxy.acessar()
+proxy.acessar()
+proxy.acessar()
+proxy.acessar()
+proxy.acessar()
